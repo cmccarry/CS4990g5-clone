@@ -1,24 +1,39 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const timeline = document.getElementById('timeline');
-  
-    // Example employment data
-    const employmentHistory = [
-      { year: 2005, position: 'CEO', company: 'Wayne Enterprises' },
-      { year: 2010, position: 'Vigilante', company: 'Batman Incorporated' },
-      { year: 2015, position: 'Justice League Member', company: 'Justice League' },
-    ];
-  
-    // Populate the timeline
-    employmentHistory.forEach(job => {
-      const timelineItem = document.createElement('div');
-      timelineItem.classList.add('timeline-item');
-      timelineItem.innerHTML = `<p>${job.year}</p><p>${job.position} at ${job.company}</p>`;
-      timeline.appendChild(timelineItem);
-    });
+  const timeline = document.getElementById('timeline');
+
+  // Example employment data
+  const employmentHistory = [
+    { year: 2005, position: 'CEO', company: 'Wayne Enterprises' },
+    { year: 2010, position: 'Vigilante', company: 'Batman Incorporated' },
+    { year: 2015, position: 'Justice League Member', company: 'Justice League' },
+  ];
+
+  // Populate the timeline
+  employmentHistory.forEach(job => {
+    const timelineItem = document.createElement('div');
+    timelineItem.classList.add('timeline-item');
+    timelineItem.innerHTML = `<p>${job.year}</p><p>${job.position} at ${job.company}</p>`;
+    timeline.appendChild(timelineItem);
   });
 
 let secretNumber;
 let attempts = 0;
+
+  // Load game data from Lambda with API Gateway
+  fetch('https://2hlfplmhpl.execute-api.us-west-1.amazonaws.com')
+    .then(response => response.json())
+    .then(data => {
+      secretNumber = data.secretNumber;
+      attempts = data.attempts;
+
+      // Display the input field and button
+      document.getElementById('guess-input').style.display = 'block';
+      document.getElementById('submit-guess').style.display = 'block';
+
+      displayMessage(data.message);
+    })
+    .catch(error => console.error('Error fetching game data:', error));
+});
 
 function initializeGame() {
   // Generate random number and initialize attempts
